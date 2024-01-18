@@ -79,3 +79,66 @@ function sendCommand(command) {
         .then(data => console.log(data))
         .catch(error => console.error('Erreur:', error));
 }
+
+
+document.addEventListener('keydown', function(event) {
+    const keyMap = {
+        'z': 'k90',  // Z key
+        'q': 'k81',  // Q key
+        's': 'k83',  // S key
+        'd': 'k68',  // D key
+        't': 'k84',  // T key
+        'l': 'k76',  // L key
+        'r': 'k82',  // R key
+        'e': 'k69',  // E key
+        'ArrowUp': 'k01',    // Up arrow
+        'ArrowLeft': 'k02',  // Left arrow
+        'ArrowDown': 'k03',  // Down arrow
+        'ArrowRight': 'k04', // Right arrow
+    };
+
+    let keyID;
+    if (event.key.startsWith('Arrow')) {
+        keyID = keyMap[event.key];
+    } else {
+        keyID = keyMap[event.key.toLowerCase()];
+    }
+
+    if (keyID) {
+        const keyElement = document.getElementById(keyID);
+        if (keyElement) {
+            keyElement.classList.add('active');
+        }
+    }
+});
+
+document.addEventListener('keyup', function(event) {
+    const keyMap = {
+        'z': 'k90',
+        'q': 'k81',
+        's': 'k83',
+        'd': 'k68',
+        't': 'k84',
+        'l': 'k76',
+        'r': 'k82',
+        'e': 'k69',
+        'ArrowUp': 'k01',
+        'ArrowLeft': 'k02',
+        'ArrowDown': 'k03',
+        'ArrowRight': 'k04',
+    };
+
+    let keyID;
+    if (event.key.startsWith('Arrow')) {
+        keyID = keyMap[event.key];
+    } else {
+        keyID = keyMap[event.key.toLowerCase()];
+    }
+
+    if (keyID) {
+        const keyElement = document.getElementById(keyID);
+        if (keyElement) {
+            keyElement.classList.remove('active');
+        }
+    }
+});

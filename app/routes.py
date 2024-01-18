@@ -27,6 +27,7 @@ def security_control():
 def gallery():
     image_folder = os.path.join(app.static_folder, 'assets/img/droneSaved')
     images = os.listdir(image_folder)
+    print("**************************************** :", len(images))
     return render_template('page/photoGalery.html', images=images)
 
 
@@ -60,5 +61,4 @@ def drone_reconnect():
         return jsonify({"status": "success"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
-    
     
