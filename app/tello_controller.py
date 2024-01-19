@@ -176,6 +176,46 @@ class TelloController:
 
         self.update_movement()
 
+
+    def fly_drone_automatically(self, lagFigure):
+        lagFigureInitial = lagFigure
+        self.move_security(0,'takeoff')
+        while lagFigure > 0:
+            self.move_security(lagFigure,'forward')
+            self.move_security(90,'right')
+            self.move_security(2,'forward')
+            self.move_security(90,'right') 
+            lagFigure -= 2
+
+            if lagFigure <= 0:
+                self.move_security(90,'right')
+                self.move_security(lagFigureInitial,'forward')
+                break
+            self.move_security(90,'left')
+            self.move_security(2,'forward')
+            self.move_security(90,'left')
+            lagFigure -= 2
+
+            if lagFigure <= 0:
+                self.move_security(180,'left')
+                self.move_security(lagFigureInitial,'forward')
+                break
+
+        self.move_security(0,'land')
+
+
+    def move_security(self, distance_cm ,command):
+        if command == 'forward':
+            self.tello.move_forward(distance_cm)
+        elif command == 'takeoff':
+            self.tello.takeoff()
+        elif command == 'land':
+            self.tello.land()
+        elif command == 'right':
+            self.tello.rotate_clockwise(distance_cm)
+        elif command == 'left':
+            self.tello.rotate_counter_clockwise(distance_cm)
+
     def stop_movement(self):
         self.for_back_velocity = 0
         self.left_right_velocity = 0

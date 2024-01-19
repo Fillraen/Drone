@@ -34,7 +34,7 @@ def gallery():
 
 @app.route('/video')
 def video():
-    video_folder = os.path.join(app.static_folder, 'assets/video/droneSaved')
+    video_folder = os.path.join(app.static_folder, r'assets\video\droneSaved')
     videos = os.listdir(video_folder)
     return render_template('page/videoGalery.html', videos=videos)
 
@@ -55,6 +55,12 @@ def video_feed():
 def send_command(cmd):
     print(cmd)
     tello_controller.control_drone(cmd)
+    return "Command sent"
+
+@app.route('/securityCommand/<tailleCm>')
+def send_securityCommand(tailleCm):
+    print("cmd security : ", tailleCm)
+    tello_controller.control_drone(tailleCm)
     return "Command sent"
 
 @app.route('/drone/status')
