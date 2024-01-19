@@ -32,6 +32,12 @@ def gallery():
     images = os.listdir(image_folder)
     return render_template('page/photoGalery.html', images=images)
 
+@app.route('/video')
+def video():
+    video_folder = os.path.join(app.static_folder, 'assets/video/droneSaved')
+    videos = os.listdir(video_folder)
+    return render_template('page/videoGalery.html', videos=videos)
+
 
 def generate_video_stream():
     while True:

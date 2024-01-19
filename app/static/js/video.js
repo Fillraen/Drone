@@ -1,5 +1,3 @@
-//see : https://codepen.io/hanieldaniel/pen/omdKoO
-
 $('.owl-carousel').owlCarousel({
     stagePadding: 200,
     loop:true,

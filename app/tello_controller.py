@@ -2,12 +2,12 @@
 from djitellopy import Tello
 from ultralytics import YOLO
 import cv2
-import mediapipe as mp
 
 import numpy as np
 import time
 from datetime import datetime
 import os
+from app import app
 
 import face_recognition
 
@@ -20,14 +20,10 @@ class TelloController:
         self.authorized_face_encodings = []
         self.authorized_face_names = [] 
         
-        self.record_path = r"C:\Users\NTAer\Desktop\t-drone\Drone\app\static\assets\video\droneSaved"
-        self.photo_path = r"C:\Users\NTAer\Desktop\t-drone\Drone\app\static\assets\img\droneSaved"
+        self.record_path = os.path.join(app.static_folder, r".\static\assets\video\droneSaved") 
+        self.photo_path =  os.path.join(app.static_folder, r".\static\assets\img\droneSaved")
         # Charger le modèle YOLO
         self.yolo_model = YOLO('yolov8s.pt')
-        
-        self.mpFaceDetection = mp.solutions.face_detection
-        self.mpDraw = mp.solutions.drawing_utils
-        self.faceDetection = self.mpFaceDetection.FaceDetection(0.75)
         
         # Drone velocities between -100~100
         self.for_back_velocity = 0
@@ -194,7 +190,8 @@ class TelloController:
              
     def load_authorized_faces(self):
         print("debut encoding") 
-        directory = r"C:\Users\NTAer\Desktop\t-drone\Drone\app\static\assets\img\authorizedFaces"
+         
+        directory = os.path.join(app.static_folder, r".\static\assets\img\authorizedFaces") 
         # Par exemple, charger les visages à partir d'un dossier
         for image_file in os.listdir(directory):
             print(image_file)
@@ -252,5 +249,3 @@ class TelloController:
     
     def __del__(self):
         self.tello.end()
-
-
