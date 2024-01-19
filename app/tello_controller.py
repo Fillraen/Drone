@@ -92,55 +92,30 @@ class TelloController:
             for box in yolo_results[0].boxes:
                 class_id = yolo_results[0].names[box.cls[0].item()]
                 cords = box.xyxy[0].tolist()
-                cords = [round(x) for x in cords]
                 conf = round(box.conf[0].item(), 2)
+
+                if class_id == 'person' and conf > 0.85:
+                    color = (0, 0, 255)  # Rouge pour les personnes
+                    start_point = (int(cords[0]), int(cords[1]))
+                    end_point = (int(cords[2]), int(cords[3]))
+                    cv2.rectangle(frame, start_point, end_point, color, 2)
+                    cv2.putText(frame, f"{class_id}: {conf}", (start_point[0], start_point[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
                 
-                # Choisir la couleur de la boîte en fonction du type d'objet
-                if class_id == 'person':
-                    color = (0, 0, 255) # Rouge pour les personnes
-                else:
-                    color = (0, 255, 0) # Vert pour les autres objets
-                
-                # Dessiner la boîte englobante
-                start_point = (cords[0], cords[1])
-                end_point = (cords[2], cords[3])
-                thickness = 2
-                cv2.rectangle(frame, start_point, end_point, color, thickness)
-                
-                # Ajouter le texte (étiquette + probabilité)
-                text = f"{class_id}: {conf}"
-                cv2.putText(frame, text, (cords[0], cords[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-                if self.frame_counter >= 5:
+                if self.frame_counter >= 10:
                     self.frame_counter = 0 
-                    if(class_id == 'person' and conf > 0.85 and self.detectFace == True):
-                        results = self.faceDetection.process(frame)
-                        if results.detections:
-                            for detection in results.detections:
-                                bboxC = detection.location_data.relative_bounding_box
-                                ih, iw, ic = frame.shape
-                                x, y, w, h = int(bboxC.xmin * iw), int(bboxC.ymin * ih), \
-                                            int(bboxC.width * iw), int(bboxC.height * ih)
-                                face_frame = frame[y:y+h, x:x+w]
+                    face_locations = face_recognition.face_locations(frame)
+                    face_encodings = face_recognition.face_encodings(frame, face_locations)
+                    
+                    for face_location, face_encoding in zip(face_locations, face_encodings):
+                            top, right, bottom, left = face_location
+                            cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
 
-                                # Dessiner la boîte englobante du visage sur la frame principale
-                                cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 255), 2)
-
-
-
-                                # Reconnaissance faciale avec face_recognition
-                                rgb_face_frame = face_frame[:, :, ::-1]
-                                try:
-                                    face_encodings = face_recognition.face_encodings(rgb_face_frame)
-                                    print("face endodings : ", face_encodings)
-                                    for face_encoding in face_encodings:
-                                        matches = face_recognition.compare_faces(self.authorized_face_encodings, face_encoding)
-                                        name = "Inconnu"
-                                        if True in matches:
-                                            first_match_index = matches.index(True)
-                                            name = self.authorized_face_names[first_match_index]
-                                        print(name)
-                                except Exception as e:
-                                    print(f"Erreur lors de l'encodage du visage: {e}")
+                            matches = face_recognition.compare_faces(self.authorized_face_encodings, face_encoding)
+                            name = "Inconnu"
+                            if True in matches:
+                                first_match_index = matches.index(True)
+                                name = self.authorized_face_names[first_match_index]
+                            cv2.putText(frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
                       
                       
         deplacement_x = self.tello.get_speed_x()

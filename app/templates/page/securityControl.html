@@ -49,36 +49,57 @@
   <!-- Content -->
   <header class="masthead">
     <div class="droneInterface">
-      <!-- step 1 draw perimeter-->
-      <div class="perimeter" id="step1">
-        <label>
-          <input type="radio" id="radioCarre" name="forme" value="carre" onclick="resetCanvas()"> Carré
-        </label>
-        <label>
-          <input type="radio" id="radioCercle" name="forme" value="rond" onclick="resetCanvas()"> Cercle
-        </label>
-
-        <canvas id="monCanvas" width="200" height="200" style="border:1px solid #000000;">
-          Votre navigateur ne supporte pas le canvas.
-        </canvas>
-
-        <p id="tailleInfo"></p>
-        <button onclick="showStep(2)">Suivant</button>
+      <!-- step 1 draw perimeter -->
+      <div class="perimeter card bg-light mb-3" id="step1" style="max-width: 100%;">
+        <div class="card-header">Dessin du Périmètre</div>
+        <div class="card-body">
+          <h5 class="card-title">Choisissez la Forme du Périmètre</h5>
+          <p class="card-text">
+            Sélectionnez la forme du périmètre (Carré ou Cercle) et dessinez-le sur le canvas.
+          </p>
+          <!-- Canvas and Controls -->
+          <label><input type="radio" id="radioCarre" name="forme" value="carre" onclick="resetCanvas()"> Carré</label>
+          <label><input type="radio" id="radioCercle" name="forme" value="rond" onclick="resetCanvas()"> Cercle</label>
+          <canvas id="monCanvas" width="200" height="200" style="border:1px solid #000000;">Votre navigateur ne supporte
+            pas le canvas.</canvas>
+          <p id="tailleInfo"></p>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-primary" onclick="showStep(2)">Suivant</button>
+        </div>
       </div>
 
-      <!-- step 2 ask to place the drone at bottom left facong north before starting-->
-      <div class="place-drone" id="step2" style="display: none;">
-        <!-- Your content for step 2 -->
-        <!-- Add buttons to go to next or previous step -->
-        <button onclick="showStep(1)">Précédent</button>
-        <button onclick="showStep(3)">Suivant</button>
+
+      <!-- step 2 ask to place the drone at bottom left facing north before starting -->
+      <div class="place-drone card bg-light mb-3" id="step2" style="display: none; max-width: 100%;">
+        <div class="card-header">Placement du Drone</div>
+        <div class="card-body">
+          <h5 class="card-title">Instructions de Positionnement</h5>
+          <p class="card-text">
+            Veuillez placer le drone en bas à gauche du périmètre prévu pour son envol. Assurez-vous que le drone soit
+            orienté face au nord pour un alignement optimal.
+          </p>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-primary" onclick="showStep(1)">Précédent</button>
+          <button class="btn btn-primary" onclick="showStep(3)">Suivant</button>
+        </div>
       </div>
+
 
       <!-- step 3 start pathing and showing stream -->
-      <div class="start-pathing" id="step3" style="display: none;">
-        <img id="video-stream" src="{{ url_for('video_feed') }}" alt="Flux Vidéo" />
-        <button onclick="showStep(2)">Précédent</button>
+      <div class="start-pathing card bg-light mb-3" id="step3" style="display: none; max-width: 100%;">
+        <div class="card-header">Démarrage et Surveillance</div>
+        <div class="card-body">
+          <h5 class="card-title">Flux Vidéo en Direct</h5>
+          <p class="card-text">Le drone commencera son chemin et affichera le flux vidéo en direct ci-dessous.</p>
+          <img id="video-stream" src="{{ url_for('video_feed') }}" alt="Flux Vidéo" style="max-width: 100%;" />
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-primary" onclick="showStep(2)">Précédent</button>
+        </div>
       </div>
+
     </div>
   </header>
   <!-- Footer-->
