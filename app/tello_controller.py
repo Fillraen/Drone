@@ -2,17 +2,22 @@
 from djitellopy import Tello
 from ultralytics import YOLO
 import cv2
-import numpy as np
+import mediapipe as mp
 
 class TelloController:
     def __init__(self):
         self.connected = False
-        self.tello = Tello()
-        self.frame_read = None
+        self.tello = Tello()        
         self.connect_drone()
+
+        self.frame_read = None
         
         # Charger le modèle YOLO
         self.yolo_model = YOLO('yolov8s.pt')
+        
+        self.mpFaceDetection = mp.solutions.face_detection
+        self.mpDraw = mp.solutions.drawing_utils
+        self.faceDetection = self.mpFaceDetection.FaceDetection(0.75)
         
         # Drone velocities between -100~100
         self.for_back_velocity = 0
@@ -21,41 +26,80 @@ class TelloController:
         self.yaw_velocity = 0
         self.speed = 60
         
-
+        self.detectPerson = False
+        self.detectFace = False
+        self.authorizePerson = False
+        
     def connect_drone(self):
         self.tello.connect()
         self.tello.streamoff()
         self.tello.streamon()
-        self.frame_read = self.tello.get_frame_read()
-                
-        self.connected = True
+        self.frame_read = self.tello.get_frame_read() 
+        self.connected = True   
+
+    def setFreemodeCam(self):
+        self.detectPerson = False
+        self.detectFace = False
+        self.authorizePerson = False
+        
+    def setSecuritymodeCam(self):
+        self.detectPerson = True
+        self.detectFace = True
+        self.authorizePerson = True
+        
+    def setRescuemodeCam(self):
+        self.detectPerson = True
+        self.detectFace = False
+        self.authorizePerson = False
 
     def get_frame(self):
         frame = self.frame_read.frame
         # Traitement de l'image par YOLO
-        yolo_results = self.yolo_model(frame)
-        # Dessiner les boîtes englobantes et les étiquettes sur l'image
-        for box in yolo_results[0].boxes:
-            class_id = yolo_results[0].names[box.cls[0].item()]
-            cords = box.xyxy[0].tolist()
-            cords = [round(x) for x in cords]
-            conf = round(box.conf[0].item(), 2)
-            
-            # Choisir la couleur de la boîte en fonction du type d'objet
-            if class_id == 'person':
-                color = (0, 0, 255) # Rouge pour les personnes
-            else:
-                color = (0, 255, 0) # Vert pour les autres objets
-            
-            # Dessiner la boîte englobante
-            start_point = (cords[0], cords[1])
-            end_point = (cords[2], cords[3])
-            thickness = 2
-            cv2.rectangle(frame, start_point, end_point, color, thickness)
-            
-            # Ajouter le texte (étiquette + probabilité)
-            text = f"{class_id}: {conf}"
-            cv2.putText(frame, text, (cords[0], cords[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+        
+        if self.detectPerson == True:
+            yolo_results = self.yolo_model(frame)
+            # Dessiner les boîtes englobantes et les étiquettes sur l'image
+            for box in yolo_results[0].boxes:
+                class_id = yolo_results[0].names[box.cls[0].item()]
+                cords = box.xyxy[0].tolist()
+                cords = [round(x) for x in cords]
+                conf = round(box.conf[0].item(), 2)
+                
+                # Choisir la couleur de la boîte en fonction du type d'objet
+                if class_id == 'person':
+                    color = (0, 0, 255) # Rouge pour les personnes
+                else:
+                    color = (0, 255, 0) # Vert pour les autres objets
+                
+                # Dessiner la boîte englobante
+                start_point = (cords[0], cords[1])
+                end_point = (cords[2], cords[3])
+                thickness = 2
+                cv2.rectangle(frame, start_point, end_point, color, thickness)
+                
+                # Ajouter le texte (étiquette + probabilité)
+                text = f"{class_id}: {conf}"
+                cv2.putText(frame, text, (cords[0], cords[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+                
+                if(class_id == 'person' and conf > 0.85 and self.detectFace == True):
+                    results = self.faceDetection.process(frame)
+                    if results.detections:
+                        for id, detection in enumerate(results.detections):
+                            mp.Draw.draw_detection(frame, detection)
+                            print(id, detection)
+                            print(detection.score)
+                            print(detection.location_data.relative_bounding_box)
+                            bboxC = detection.location_data.relative_bounding_box
+                            ih, iw, ic = frame.shape
+                            bbox = int(bboxC.xmin * iw), int(bboxC.ymin * ih), \
+                                int(bboxC.width * iw), int(bboxC.height * ih)
+                            
+                            cv2.rectangle(frame, bbox, (255, 0, 255), 2)
+                            
+                            cv2.putText(frame, f'{int(detection.score[0] * 100)}%',
+                                        (bbox[0], bbox[1] - 20), cv2.FONT_HERSHEY_PLAIN,
+                                        2, (255, 0, 255), 2)
+                    
         return frame
 
     def control_drone(self, command):
@@ -94,8 +138,8 @@ class TelloController:
     def update_movement(self):
         self.tello.send_rc_control(self.left_right_velocity, self.for_back_velocity,
                                    self.up_down_velocity, self.yaw_velocity)
-        
-        
+             
     def __del__(self):
         self.tello.end()
+
 
