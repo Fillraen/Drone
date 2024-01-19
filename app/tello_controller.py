@@ -7,7 +7,6 @@ import numpy as np
 import time
 from datetime import datetime
 import os
-from app import app
 
 import face_recognition
 
@@ -19,9 +18,9 @@ class TelloController:
         self.frame_counter = 0  # Compteur pour le suivi des frames.
         self.authorized_face_encodings = []
         self.authorized_face_names = [] 
-        
-        self.record_path = os.path.join(app.static_folder, r".\static\assets\video\droneSaved") 
-        self.photo_path =  os.path.join(app.static_folder, r".\static\assets\img\droneSaved")
+    
+        self.record_path =  r".\app\static\assets\video\droneSaved"
+        self.photo_path =   r".\app\static\assets\img\droneSaved"
         # Charger le modèle YOLO
         self.yolo_model = YOLO('yolov8s.pt')
         
@@ -190,8 +189,8 @@ class TelloController:
              
     def load_authorized_faces(self):
         print("debut encoding") 
-         
-        directory = os.path.join(app.static_folder, r".\static\assets\img\authorizedFaces") 
+        print("chemin actuelle : ", os.getcwd())
+        directory = r".\app\static\assets\img\authorizedFaces"
         # Par exemple, charger les visages à partir d'un dossier
         for image_file in os.listdir(directory):
             print(image_file)
