@@ -11,6 +11,12 @@ document.addEventListener('keydown', function(event) {
             case 'l':
                 sendCommand('land');
                 break;
+            case 'c':
+                sendCommand('photo');
+                break;
+            case 'r':
+                sendCommand('record');
+                break;
             // Commandes avec maintien continu
             case 'z':
                 sendCommand('up');
@@ -91,6 +97,7 @@ document.addEventListener('keydown', function(event) {
         'l': 'k76',  // L key
         'r': 'k82',  // R key
         'e': 'k69',  // E key
+        'c': 'k67',
         'ArrowUp': 'k01',    // Up arrow
         'ArrowLeft': 'k02',  // Left arrow
         'ArrowDown': 'k03',  // Down arrow
@@ -122,6 +129,7 @@ document.addEventListener('keyup', function(event) {
         'l': 'k76',
         'r': 'k82',
         'e': 'k69',
+        'c': 'k67',
         'ArrowUp': 'k01',
         'ArrowLeft': 'k02',
         'ArrowDown': 'k03',
