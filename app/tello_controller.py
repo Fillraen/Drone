@@ -2,6 +2,7 @@
 from djitellopy import Tello
 from ultralytics import YOLO
 import cv2
+import numpy as np
 
 class TelloController:
     def __init__(self):
@@ -97,5 +98,4 @@ class TelloController:
         
     def __del__(self):
         self.tello.end()
-
 

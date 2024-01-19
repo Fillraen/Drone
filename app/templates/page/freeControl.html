@@ -47,80 +47,82 @@
     </div>
   </nav>
   <!-- Content -->
-  <div class="droneInterface">
-    <div>
-      <img id="video-stream" src="{{ url_for('video_feed') }}" alt="Flux Vidéo" />
-    </div>
+  <header class="masthead">
+    <div class="droneInterface">
+      <div>
+        <img id="video-stream" src="{{ url_for('video_feed') }}" alt="Flux Vidéo" />
+      </div>
 
-    <div class="key-wrapper center" id="clavier">
-      <ul class="lign">
-        <div>
-          <li class="key" id="k90">Z</li>
-          <p>Monter</p>
-        </div>
-        <div class="belowLign">
+      <div class="key-wrapper center" id="clavier">
+        <ul class="lign">
           <div>
-            <li class="key" id="k81">Q</li>
-            <p>Tourner</p>
+            <li class="key" id="k90">Z</li>
+            <p>Monter</p>
           </div>
-          <div>
-            <li class="key" id="k83">S</li>
-            <p>Descendre</p>
-          </div>
-          <div>
-            <li class="key" id="k68">D</li>
-            <p>Tourner</p>
-          </div>
-        </div>
-      </ul>
-      <ul class="lign">
-        <div>
-          <li class="key" id="k01">↑</li>
-          <p>Tout droit</p>
-        </div>
-        <div>
           <div class="belowLign">
             <div>
-              <li class="key" id="k02">←</li>
-              <p>Gauche</p>
+              <li class="key" id="k81">Q</li>
+              <p>Tourner</p>
             </div>
             <div>
-              <li class="key" id="k03">↓</li>
-              <p>Derriere</p>
+              <li class="key" id="k83">S</li>
+              <p>Descendre</p>
             </div>
             <div>
-              <li class="key" id="k04">→</li>
-              <p>Droite</p>
+              <li class="key" id="k68">D</li>
+              <p>Tourner</p>
             </div>
           </div>
-        </div>
-      </ul>
-      <ul class="lign">
-        <div class="actionBTN">
+        </ul>
+        <ul class="lign">
           <div>
-            <div>
-              <li class="key" id="k84">T</li>
-              <p>Décoller</p>
-            </div>
-            <div>
-              <li class="key" id="k76">L</li>
-              <p>Attérir</p>
+            <li class="key" id="k01">↑</li>
+            <p>Tout droit</p>
+          </div>
+          <div>
+            <div class="belowLign">
+              <div>
+                <li class="key" id="k02">←</li>
+                <p>Gauche</p>
+              </div>
+              <div>
+                <li class="key" id="k03">↓</li>
+                <p>Derriere</p>
+              </div>
+              <div>
+                <li class="key" id="k04">→</li>
+                <p>Droite</p>
+              </div>
             </div>
           </div>
-          <div class="belowLigne">
+        </ul>
+        <ul class="lign">
+          <div class="actionBTN">
             <div>
-              <li class="key" id="k82">R</li>
-              <p>Record</p>
+              <div>
+                <li class="key" id="k84">T</li>
+                <p>Décoller</p>
+              </div>
+              <div>
+                <li class="key" id="k76">L</li>
+                <p>Attérir</p>
+              </div>
             </div>
-            <div>
-              <li class="key" id="k69">E</li>
-              <p>Emergency</p>
+            <div class="belowLigne">
+              <div>
+                <li class="key" id="k82">R</li>
+                <p>Record</p>
+              </div>
+              <div>
+                <li class="key" id="k69">E</li>
+                <p>Emergency</p>
+              </div>
             </div>
           </div>
-        </div>
-      </ul>
+        </ul>
+      </div>
     </div>
-  </div>
+  </header>
   <!-- Footer-->
   <footer class="footer bg-black small text-center text-white-50">
     <div class="container px-4 px-lg-5">Copyright &copy; NICOLAS TREHOU</div>

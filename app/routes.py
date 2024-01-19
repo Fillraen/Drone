@@ -12,14 +12,17 @@ def index():
 
 @app.route('/free-control')
 def free_control():
+    tello_controller.setFreemodeCam()
     return render_template('page/freeControl.html')
 
 @app.route('/rescue-control')
 def rescue_control():
+    tello_controller.setRescuemodeCam()
     return render_template('page/rescueControl.html')
 
 @app.route('/security-control')
 def security_control():
+    tello_controller.setSecuritymodeCam()
     return render_template('page/securityControl.html')
 
 
@@ -27,7 +30,6 @@ def security_control():
 def gallery():
     image_folder = os.path.join(app.static_folder, 'assets/img/droneSaved')
     images = os.listdir(image_folder)
-    print("**************************************** :", len(images))
     return render_template('page/photoGalery.html', images=images)
 
 
